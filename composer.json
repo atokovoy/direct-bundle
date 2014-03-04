@@ -1,14 +1,14 @@
 {
-    "name": "oaugustus/direct-bundle",
+    "name": "yoshikitanaka/direct-bundle",
     "type": "symfony-bundle",
     "description": "Symfony 2.3 ExtDirect Bundle",
     "keywords": ["ExtJS","ExtDirect"],
-    "homepage": "https://github.com/oaugustus/",
+    "homepage": "https://github.com/yoshikitanaka/",
     "license": "MIT",
     "authors": [
         {
-            "name": "Otávio Fernandes",
-            "email": "otavio@netonsolucoes.com.br"
+            "name": "yoshiki tanaka",
+            "email": "yoshiki@iii-planning.com"
         }
     ],
     "minimum-stability": "dev",
