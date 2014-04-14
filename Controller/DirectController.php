@@ -66,8 +66,19 @@ class DirectController extends Controller
 
         // create response
         $response = new Response($router->route());
-        $response->headers->set('Content-Type', 'application/json');
-        
+
+        /**
+         * The server response is parsed by the browser to create the document for the IFRAME.
+         * If the server is using JSON to send the return object, then the Content-Type header must be
+         * set to "text/html" in order to tell the browser to insert the text unchanged into the document body.
+         */
+        $request = $this->container->get('request');
+        if ($request->getContent() != '') {
+            $response->headers->set('Content-Type', 'application/json');
+        } else {
+            $response->headers->set('Content-Type', 'text/html');
+        }
+
         return $response;
     }
 }
