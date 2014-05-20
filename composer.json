@@ -1,5 +1,6 @@
 {
     "name": "atokovoy/direct-bundle",
+    "version": "1.0.0",
     "type": "symfony-bundle",
     "description": "Symfony 2.3 ExtDirect Bundle",
     "keywords": ["ExtJS","ExtDirect"],
