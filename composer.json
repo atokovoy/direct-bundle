@@ -19,7 +19,7 @@
         "symfony/framework-bundle": "2.4.*@dev"
     },
     "autoload": {
-        "psr-0": { "Neton\\DirectBundle": "" }
+        "psr-0": { "Neton": "../../" }
     },
     "target-dir": "Neton/DirectBundle"
 }
