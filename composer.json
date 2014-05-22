@@ -1,6 +1,6 @@
 {
     "name": "atokovoy/direct-bundle",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "type": "symfony-bundle",
     "description": "Symfony 2.3 ExtDirect Bundle",
     "keywords": ["ExtJS","ExtDirect"],
@@ -10,6 +10,10 @@
         {
             "name": "yoshiki tanaka",
             "email": "yoshiki@iii-planning.com"
+        },
+	{
+            "name": "Anton Tokovoy",
+            "email": "barss.dev@gmail.com"
         }
     ],
     "minimum-stability": "dev",

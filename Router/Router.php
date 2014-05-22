@@ -3,6 +3,12 @@ namespace Neton\DirectBundle\Router;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Neton\DirectBundle\Api\ControllerApi;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request as FoundationRequest;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Router is the ExtDirect Router class.
@@ -33,6 +39,13 @@ class Router
      * @var Symfony\Component\DependencyInjection\Container
      */
     protected $container;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    protected $httpKernel;
     
     /**
      * Initialize the router object.
@@ -46,6 +59,8 @@ class Router
         $this->response = new Response($this->request->getCallType(), $this->request->isUpload());
         $this->defaultAccess = $container->getParameter('direct.api.default_access');
         $this->session = $this->container->get('session')->get($container->getParameter('direct.api.session_attribute'));
+        $this->eventDispatcher = $this->container->get('event_dispatcher');
+        $this->httpKernel = $this->container->get('http_kernel');
     }
 
     /**
@@ -75,11 +90,12 @@ class Router
         $api = new ControllerApi($this->container, $this->getControllerClass($call->getAction()));
 
         $controller = $this->resolveController($call->getAction());
+
         $method = $call->getMethod()."Action";
         $accessType = $api->getMethodAccess($method);
 
         if (!is_callable(array($controller, $method))) {
-            //todo: throw an execption method not callable
+            //todo: throw an exception method not callable
             return false;
         } else
 
@@ -96,9 +112,25 @@ class Router
         }
 
         if (!isset($result)){
-            try{
+            try {
+                $callable = array($controller, $method);
+
+                $request = new FoundationRequest(array(), array('params' => $call->getData()), array('params' => $call->getData()));
+
+                $event = new FilterControllerEvent($this->httpKernel, $callable, $request, HttpKernelInterface::MASTER_REQUEST);
+                $this->eventDispatcher->dispatch(KernelEvents::CONTROLLER, $event);
+                $callable = $event->getController();
+
+                $resolver = new ControllerResolver();
+
+                // controller arguments
+                $arguments = $resolver->getArguments($request, $callable);
+
+                // call controller
+                $result = call_user_func_array($callable, $arguments);
+
                 //$result = call_user_func_array(array($controller, $method), $call->getData());
-                $result = $controller->$method($call->getData());
+                //$result = $controller->$method($call->getData());
                 $result = $call->getResponse($result);
             }catch(\Exception $e){
                 $result = $call->getException($e);
