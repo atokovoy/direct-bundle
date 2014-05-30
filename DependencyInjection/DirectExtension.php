@@ -27,7 +27,6 @@ class DirectExtension extends Extension
         foreach ($configs as $config) {
             $this->registerApiConfiguration($config, $container);
         }
-        
     }
 
     /**
@@ -38,8 +37,16 @@ class DirectExtension extends Extension
      */
     protected function registerApiConfiguration($config, ContainerBuilder $container)
     {
-        if (isset($config['api']['route_pattern'])) {
-            $container->setParameter('direct.api.route_pattern', $config['api']['route_pattern']);
+        if (isset($config['api']['route_name'])) {
+            $container->setParameter('direct.api.route_name', $config['api']['route_name']);
+        }
+
+        if (isset($config['api']['use_absolute_url'])) {
+            $container->setParameter('direct.api.use_absolute_url', $config['api']['use_absolute_url']);
+        }
+
+        if (isset($config['api']['allow_remote_configuration'])) {
+            $container->setParameter('direct.api.allow_remote_configuration', $config['api']['allow_remote_configuration']);
         }
 
         if (isset($config['api']['type'])) {

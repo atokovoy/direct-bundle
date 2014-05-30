@@ -37,11 +37,11 @@ class ControllerApi
      */
     public function __construct($container, $controller)
     {
-        try {
+        //try {
             $this->reflection = new \ReflectionClass($controller);
-        } catch (Exception $e) {
+        //} catch (Exception $e) {
             // @todo: throw an exception
-        }
+        //}
         
         $this->container = $container;
         $this->remoteAttribute = $container->getParameter('direct.api.remote_attribute');

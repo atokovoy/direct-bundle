@@ -33,9 +33,9 @@ class Api
 
         if ($container->get('kernel')->isDebug()) {
             $this->api = json_encode($this->createApi());
-        } else {            
+        } else {
             $this->api = $this->getApiFromCache();
-        }        
+        }
     }
 
     /**
@@ -44,7 +44,7 @@ class Api
      * @return string JSON API description
      */
     public function  __toString()
-    {        
+    {
         return $this->api;
     }
 
@@ -57,11 +57,11 @@ class Api
     {
         $bundles = $this->getControllers();
 
-        $actions = array();        
+        $actions = array();
 
-        foreach ($bundles as $bundle => $controllers ) {
+        foreach ($bundles as $bundle => $controllers) {
             $bundleShortName = str_replace('Bundle', '', $bundle);
-            
+
             foreach ($controllers as $controller) {
                 $api = new ControllerApi($this->container, $controller);
 
@@ -71,12 +71,36 @@ class Api
             }
         }
 
+        /**
+         * @var $router Router
+         */
+        $router = $this->container->get('router');
+
+        $useAbsoluteUrl = $this->container->getParameter('direct.api.use_absolute_url');
+        $allowRemoteConfiguration = $this->container->getParameter('direct.api.allow_remote_configuration');
+        $namespace = $this->container->getParameter('direct.api.namespace');
+        $id = $this->container->getParameter('direct.api.id');
+        if ($allowRemoteConfiguration) {
+            /**
+             * @var $request Request
+             */
+            $request = $this->container->get('request');
+
+            if ($request->query->has('namespace')) {
+                $namespace = $request->query->get('namespace');
+            }
+
+            if ($request->query->has('id')) {
+                $id = $request->query->get('id');
+            }
+        }
+
+
         return array(
-            'url' => $this->container->get('request')->getBaseUrl().
-                     $this->container->getParameter('direct.api.route_pattern'),
+            'url' => $router->generate($this->container->getParameter('direct.api.route_name'), array(), $useAbsoluteUrl),
             'type' => $this->container->getParameter('direct.api.type'),
-            'namespace' => $this->container->getParameter('direct.api.namespace'),
-            'id' => $this->container->getParameter('direct.api.id'),
+            'namespace' => $namespace,
+            'id' => $id,
             'actions' => $actions
         );
     }
@@ -101,7 +125,7 @@ class Api
     {
         $controllers = array();
         $finder = new ControllerFinder();
-        
+
         foreach ($this->container->get('kernel')->getBundles() as $bundle) {
             $found = $finder->getControllers($bundle);
             if (!empty ($found)) {
@@ -110,5 +134,5 @@ class Api
         }
 
         return $controllers;
-    }    
+    }
 }

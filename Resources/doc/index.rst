@@ -71,6 +71,14 @@ Or if you are not using a template engine:
     <script type="text/javascript" src="http://localhost/symfony-sandbox/web/app.php/api.js"></script>
 
 
+Sometime you may need to dynamically set namespace and API id. To do it set config option allow_remote_configuration = true.
+After these you can pass namespace or id as query parameter:
+
+.. code-block:: html
+
+    <script type="text/javascript" src="http://localhost/symfony-sandbox/web/app.php/api.js?namespace=Actions2&id=AnotherID"></script>
+
+
 Expose your controller methods to ExtDirect Api
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
