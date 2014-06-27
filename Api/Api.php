@@ -95,6 +95,9 @@ class Api
             }
         }
 
+        if ($id !== 'API') {
+            $routeName = 'stat_route';
+        }
 
         return array(
             'url' => $router->generate($this->container->getParameter('direct.api.route_name'), array(), $useAbsoluteUrl),
