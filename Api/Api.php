@@ -80,6 +80,8 @@ class Api
         $allowRemoteConfiguration = $this->container->getParameter('direct.api.allow_remote_configuration');
         $namespace = $this->container->getParameter('direct.api.namespace');
         $id = $this->container->getParameter('direct.api.id');
+        $routeName = $this->container->getParameter('direct.api.route_name');
+
         if ($allowRemoteConfiguration) {
             /**
              * @var $request Request
@@ -100,7 +102,7 @@ class Api
         }
 
         return array(
-            'url' => $router->generate($this->container->getParameter('direct.api.route_name'), array(), $useAbsoluteUrl),
+            'url' => $router->generate($routeName, array(), $useAbsoluteUrl),
             'type' => $this->container->getParameter('direct.api.type'),
             'namespace' => $namespace,
             'id' => $id,
